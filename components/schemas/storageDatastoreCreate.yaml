@@ -2,14 +2,30 @@ type: object
 properties:
   name:
     type: string
+    required: true
+    description: The name of the datastore to be created.
   datastoreType:
     type: string
     description: The code of the datatoreType
+    required: true
+  config:
+    description: Configuration options for the datastore, varies based on the type of datastore.
+    oneOf:
+      - $ref: clusterDatastoreConfigNFS.yaml
+      - $ref: clusterDatastoreConfigGFS2.yaml
+      - $ref: storageDatastoreConfigGeneric.yaml
   refType:
     type: string
+    required: true
+    enum:
+      - 'ComputeZone'
+      - 'ComputeServerGroup'
+    description: Type of the resource this datastore is associated with, can be 'ComputeZone' ('Cloud') or 'ComputeServerGroup' ('Cluster')
   refId:
     type: integer
     format: int64
+    required: true
+    description: The ID of the resource this datastore is associated with, e.g. ComputeZone, ComputeServerGroup
   storageServer:
     type: object
     properties:
@@ -75,6 +91,7 @@ properties:
         items:
           type: object
   datastores:
+    description: List of datastores associated with this datastore, for use with vSphere clouds.
     type: array
     items:
       type: object
